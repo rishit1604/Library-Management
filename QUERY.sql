@@ -82,12 +82,12 @@ WHERE CURRENT_DATE BETWEEN t.start_date AND t.end_date
 GROUP BY sp.plan_id;
 
 -- 15. Check if a user has exceeded their max book issue limit
-SELECT bi.user_id, sp.plan_name, sp.max_book_limit, COUNT(*) AS currently_issued
+SELECT bi.user_id, sp.plan_name, COUNT(*) AS currently_issued
 FROM Book_Issue bi
 JOIN takes t ON bi.user_id = t.user_id
 JOIN Subscription_Plan sp ON t.plan_id = sp.plan_id
 WHERE bi.user_id = 1
   AND bi.status IN ('Issued', 'Overdue')
   AND CURRENT_DATE BETWEEN t.start_date AND t.end_date
-GROUP BY bi.user_id, sp.plan_name, sp.max_book_limit
+GROUP BY bi.user_id, sp.plan_name
 HAVING COUNT(*) >= sp.max_book_limit;
