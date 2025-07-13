@@ -22,11 +22,11 @@ SET status = 'Returned', return_date = CURRENT_DATE
 WHERE issue_id = 1;
 
 -- 5. List overdue books and their count
-SELECT b.book_id, b.title, COUNT(*) AS overdue_count
+SELECT b.book_id,COUNT(*) AS overdue_count
 FROM Book b
 JOIN Book_Issue bi ON b.book_id = bi.book_id
 WHERE bi.status = 'Overdue'
-GROUP BY b.book_id, b.title;
+GROUP BY b.book_id;
 
 -- 6. List all active subscription plans
 SELECT *
@@ -61,36 +61,27 @@ FROM Book_Feedback
 WHERE book_id = 1001;
 
 -- 12. Top 5 most borrowed books
-SELECT b.book_id, b.title, COUNT(*) AS borrow_count
+SELECT b.book_id, COUNT(*) AS borrow_count
 FROM Book b
 JOIN Book_Issue bi ON b.book_id = bi.book_id
-GROUP BY b.book_id, b.title
+GROUP BY b.book_id
 ORDER BY borrow_count DESC
 LIMIT 5;
-
--- 13. Top 5 most borrowed books in a category
-SELECT b.book_id, b.title, b.category, COUNT(*) AS borrow_count
-FROM Book b
-JOIN Book_Issue bi ON b.book_id = bi.book_id
-WHERE b.category = 'Classic'
-GROUP BY b.book_id, b.title, b.category
-ORDER BY borrow_count DESC
-LIMIT 5;
-
--- 14. Number of users subscribed to each plan
-SELECT sp.plan_id, sp.plan_name, COUNT(t.user_id) AS total_subscribers
+ 
+-- 13. Number of users subscribed to each plan
+SELECT sp.plan_id, COUNT(t.user_id) AS total_subscribers
 FROM Subscription_Plan sp
 LEFT JOIN takes t ON sp.plan_id = t.plan_id
-GROUP BY sp.plan_id, sp.plan_name;
+GROUP BY sp.plan_id;
 
--- 15. Number of active subscribers for each plan
-SELECT sp.plan_id, sp.plan_name, COUNT(t.user_id) AS active_users
+-- 14. Number of active subscribers for each plan
+SELECT sp.plan_id, COUNT(t.user_id) AS active_users
 FROM Subscription_Plan sp
 LEFT JOIN takes t ON sp.plan_id = t.plan_id
 WHERE CURRENT_DATE BETWEEN t.start_date AND t.end_date
-GROUP BY sp.plan_id, sp.plan_name;
+GROUP BY sp.plan_id;
 
--- 16. Check if a user has exceeded their max book issue limit
+-- 15. Check if a user has exceeded their max book issue limit
 SELECT bi.user_id, sp.plan_name, sp.max_book_limit, COUNT(*) AS currently_issued
 FROM Book_Issue bi
 JOIN takes t ON bi.user_id = t.user_id
