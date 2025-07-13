@@ -43,7 +43,7 @@ CREATE TABLE Book_Issue (
     issue_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     book_id INT NOT NULL,
-    status VARCHAR(50) DEFAULT 'Issued' CHECK (status IN ('Issued', 'Returned', 'Overdue', 'Lost')),
+    status VARCHAR(50) DEFAULT 'Issued' CHECK (status IN ('Issued', 'Returned', 'Overdue')),
     issue_date DATE DEFAULT CURRENT_DATE,
     due_date DATE NOT NULL,
     return_date DATE,
